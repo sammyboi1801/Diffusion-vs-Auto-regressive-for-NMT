@@ -2,9 +2,9 @@
 Script to evaluate a trained model and compute metrics.
 """
 import argparse
-from diffutext.utils.config import load_config
-from diffutext.utils.logger import setup_logger
-from diffutext.utils.metrics import calculate_bleu, calculate_perplexity
+from LatentDiffusionTransformerCode.utils.config import load_config
+from LatentDiffusionTransformerCode.utils.logger import setup_logger
+from LatentDiffusionTransformerCode.utils.metrics import calculate_bleu, calculate_perplexity
 # Import necessary components
 
 def main():

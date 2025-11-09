@@ -2,8 +2,8 @@
 Script to train the Hybrid (DiffuText) model.
 """
 import argparse
-from diffutext.utils.config import load_config
-from diffutext.utils.logger import setup_logger
+from LatentDiffusionTransformerCode.utils.config import load_config
+from LatentDiffusionTransformerCode.utils.logger import setup_logger
 # Import necessary components
 
 def main():
