@@ -1,0 +1,20 @@
+# Configuration for the Diffusion Model
+
+model_params:
+  latent_dim: 256
+  num_timesteps: 1000
+
+data:
+  # Path to pre-computed latent vectors from an encoder
+  path: 'path/to/your/latents'
+  format: 'pt' # PyTorch tensors
+
+training:
+  batch_size: 64
+  num_epochs: 100
+  learning_rate: 0.0002
+  optimizer: 'AdamW'
+
+inference:
+  # Corresponds to number of samples to generate
+  num_samples: 10

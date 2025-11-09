@@ -1,0 +1,17 @@
+# Core deep learning framework
+torch
+
+# For data handling and tokenization
+# transformers
+# datasets
+
+# For configuration files
+PyYAML
+
+# For evaluation metrics (optional, but common)
+# nltk
+# sacrebleu
+# sentence-transformers
+
+# For progress bars
+tqdm
