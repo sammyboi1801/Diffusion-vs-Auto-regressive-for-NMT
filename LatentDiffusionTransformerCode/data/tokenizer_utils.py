@@ -2,41 +2,26 @@
 Common tokenization and detokenization logic.
 """
 from typing import List
+from transformers import AutoTokenizer
 
-def get_tokenizer(model_name: str):
+def get_tokenizer(model_name: str = "bert-base-multilingual-cased"):
     """
-    Initializes and returns a tokenizer, e.g., from Hugging Face's transformers.
-
-    Args:
-        model_name (str): The name of the pre-trained model to load the tokenizer for.
-
-    Returns:
-        A tokenizer instance.
+    Initializes and returns a tokenizer from Hugging Face.
     """
-    raise NotImplementedError("Tokenizer initialization not implemented.")
+    # We use a multilingual model since we are doing En -> Fr
+    return AutoTokenizer.from_pretrained(model_name)
 
 def tokenize_text(text: str, tokenizer) -> List[int]:
     """
     Tokenizes a single string of text.
-
-    Args:
-        text (str): The text to tokenize.
-        tokenizer: The tokenizer instance.
-
-    Returns:
-        List[int]: A list of token IDs.
     """
-    raise NotImplementedError("Text tokenization not implemented.")
+    # encode returns a list of integers (IDs)
+    # add_special_tokens=True adds [CLS] and [SEP] which are crucial for Transformers
+    return tokenizer.encode(text, add_special_tokens=True)
 
 def detokenize_text(token_ids: List[int], tokenizer) -> str:
     """
     Detokenizes a list of token IDs back into a string.
-
-    Args:
-        token_ids (List[int]): The list of token IDs.
-        tokenizer: The tokenizer instance.
-
-    Returns:
-        str: The decoded text.
     """
-    raise NotImplementedError("Text detokenization not implemented.")
+    # skip_special_tokens=True removes [CLS], [SEP], [PAD]
+    return tokenizer.decode(token_ids, skip_special_tokens=True)
