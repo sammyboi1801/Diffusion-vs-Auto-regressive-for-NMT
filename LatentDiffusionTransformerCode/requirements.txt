@@ -9,9 +9,14 @@ torch
 PyYAML
 
 # For evaluation metrics (optional, but common)
-# nltk
+nltk
 # sacrebleu
 # sentence-transformers
+rouge-score
+bert-score
+matplotlib
+seaborn
+pandas
 
 # For progress bars
 tqdm
