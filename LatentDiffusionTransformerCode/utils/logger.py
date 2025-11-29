@@ -15,5 +15,15 @@ def setup_logger(name: str, level=logging.INFO) -> logging.Logger:
     Returns:
         logging.Logger: A configured logger instance.
     """
-    raise NotImplementedError("Setup logger not implemented.")
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    
+    # Prevent adding multiple handlers if the logger was already configured
+    if not logger.handlers:
+        handler = logging.StreamHandler(sys.stdout)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        
+    return logger
 

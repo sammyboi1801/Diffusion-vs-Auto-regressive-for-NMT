@@ -1,36 +1,46 @@
 """
 Baseline Transformer implementation.
 """
+import torch
+import math
 import torch.nn as nn
 from abc import ABC, abstractmethod
 
 class BaseModel(nn.Module, ABC):
     """
     Abstract base class for all models.
-    Ensures that all models implement a forward pass and a method to load from a checkpoint.
     """
     def __init__(self):
         super(BaseModel, self).__init__()
 
     @abstractmethod
     def forward(self, *args, **kwargs):
-        """
-        Defines the forward pass of the model.
-        """
         raise NotImplementedError
 
-    @classmethod
-    def from_checkpoint(cls, checkpoint_path: str):
-        """
-        Loads a model from a saved checkpoint.
+class PositionalEncoding(nn.Module):
+    """
+    Injects some information about the relative or absolute position of the tokens
+    in the sequence. The positional encodings have the same dimension as the embeddings,
+    so that the two can be summed.
+    """
+    def __init__(self, d_model: int, dropout: float = 0.1, max_len: int = 5000):
+        super().__init__()
+        self.dropout = nn.Dropout(p=dropout)
 
+        position = torch.arange(max_len).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
+        pe = torch.zeros(max_len, 1, d_model)
+        pe[:, 0, 0::2] = torch.sin(position * div_term)
+        pe[:, 0, 1::2] = torch.cos(position * div_term)
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        """
         Args:
-            checkpoint_path (str): Path to the checkpoint file.
-
-        Returns:
-            An instance of the model with loaded weights.
+            x: Tensor, shape [seq_len, batch_size, embedding_dim]
         """
-        raise NotImplementedError("Loading model from checkpoint not implemented.")
+        x = x + self.pe[:x.size(0)]
+        return self.dropout(x)
 
 class TransformerModel(BaseModel):
     """

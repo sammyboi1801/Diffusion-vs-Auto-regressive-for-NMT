@@ -45,7 +45,7 @@ class EnFrDataset(Dataset):
             "tgt_mask": tgt_enc['attention_mask'].squeeze(0)
         }
 
-def load_dataset(dataset_name_or_path: str, tokenizer, batch_size: int, split: str = 'train', max_samples=20000) -> DataLoader:
+def load_dataset(dataset_name_or_path: str, tokenizer, batch_size: int, split: str = 'train', max_samples=150000) -> DataLoader:
     """
     Loads the en-fr.csv, splits it, and returns a DataLoader.
     """
