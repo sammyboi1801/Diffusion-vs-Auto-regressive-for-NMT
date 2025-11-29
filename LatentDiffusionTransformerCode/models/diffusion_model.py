@@ -1,78 +1,81 @@
-"""
-Diffusion model for latent space generation.
-"""
 import torch
 import torch.nn as nn
-from .transformer_model import BaseModel
+import torch.nn.functional as F
+import math
+
+# Mock BaseModel for inheritance 
+class BaseModel(nn.Module):
+    def __init__(self): super().__init__()
+
+
+class SinusoidalPositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_len=5000):
+        super(SinusoidalPositionalEncoding, self).__init__()
+
+        # Create a matrix of [max_len, d_model] representing the positional encodings
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0)
+
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        """
+        Args:
+            x: Input tensor of shape (batch_size, seq_len, d_model)
+        """
+        return self.pe[:, :x.size(1)]
 
 class DiffusionModel(BaseModel):
     """
-    A Diffusion model for generating latent representations of text.
-    This model learns to denoise a corrupted signal to produce a clean latent vector.
+    A LLaDA-style non-autoregressive model for text generation.
     """
-    def __init__(self, latent_dim: int, num_timesteps: int):
-        """
-        Initializes the Diffusion model.
-
-        Args:
-            latent_dim (int): The dimensionality of the latent space.
-            num_timesteps (int): The number of diffusion timesteps.
-        """
+    def __init__(self, config: dict):
         super(DiffusionModel, self).__init__()
-        self.latent_dim = latent_dim
-        self.num_timesteps = num_timesteps
-        raise NotImplementedError("DiffusionModel initialization not implemented.")
+        self.config = config
+        model_params = config['model_params']
+        self.dim = model_params['dim']
+        self.vocab_size = model_params['vocab_size']
+        self.max_len = model_params['max_len']
+        self.mask_token_id = model_params['mask_token_id']
+        self.pad_token_id = model_params['pad_token_id']
+        
+        # Embeddings
+        self.embedding = nn.Embedding(self.vocab_size, self.dim)
+        self.pos_embedding = SinusoidalPositionalEncoding(self.dim, self.max_len)
+        
+        # Transformer Encoder (Bidirectional Attention)
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=self.dim, 
+            nhead=model_params['n_heads'], 
+            dim_feedforward=self.dim * 4, 
+            batch_first=True,
+            norm_first=True # Usually stabilizes training
+        )
+        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=model_params['n_layers'])
+        self.output_head = nn.Linear(self.dim, self.vocab_size)
+        
+        print("DiffusionModel (LLaDA-style) initialized.")
 
-    def forward(self, noisy_latent: torch.Tensor, timestep: torch.Tensor):
-        """
-        The forward pass predicts the noise from a noisy latent vector.
-
-        Args:
-            noisy_latent (torch.Tensor): The noisy latent vector (z_t).
-            timestep (torch.Tensor): The current timestep (t).
-
-        Returns:
-            torch.Tensor: The predicted noise.
-        """
-        raise NotImplementedError("DiffusionModel forward pass not implemented.")
-
-    def forward_diffusion(self, x_0: torch.Tensor, t: torch.Tensor):
-        """
-        Adds noise to a clean latent vector x_0 for a given timestep t.
-        This is the "forward process" q(x_t | x_0).
-
-        Args:
-            x_0 (torch.Tensor): The initial clean latent vector.
-            t (torch.Tensor): The timestep to diffuse to.
-
-        Returns:
-            A tuple of (mean, variance, noisy_sample).
-        """
-        raise NotImplementedError("DiffusionModel forward diffusion not implemented.")
-
-    def reverse_diffusion(self, x_t: torch.Tensor, t: torch.Tensor):
-        """
-        Performs one step of the reverse diffusion process (denoising).
-        This is the "reverse process" p(x_{t-1} | x_t).
-
-        Args:
-            x_t (torch.Tensor): The noisy latent vector at timestep t.
-            t (torch.Tensor): The current timestep.
-
-        Returns:
-            torch.Tensor: The less noisy latent vector at timestep t-1.
-        """
-        raise NotImplementedError("DiffusionModel reverse diffusion not implemented.")
-
-    def sample_latent(self, num_samples: int) -> torch.Tensor:
-        """
-        Generates new latent vectors by sampling from the diffusion model.
-        This involves starting with pure noise and iteratively denoising it.
-
-        Args:
-            num_samples (int): The number of latent vectors to generate.
-
-        Returns:
-            torch.Tensor: A batch of clean latent vectors (x_0).
-        """
-        raise NotImplementedError("DiffusionModel latent sampling not implemented.")
+    def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
+        b, l = input_ids.shape
+        
+        # Get token embeddings
+        x = self.embedding(input_ids)
+        
+        # Add sinusoidal positional embeddings
+        x = x + self.pos_embedding(x)
+        
+        # Padding mask (ignore pad tokens)
+        # In PyTorch Transformer: True means ignore, False means attend
+        padding_mask = (input_ids == self.pad_token_id)
+        
+        # Pass through Transformer
+        x = self.transformer(x, src_key_padding_mask=padding_mask)
+        
+        # Project to vocab size
+        logits = self.output_head(x)
+        return logits
