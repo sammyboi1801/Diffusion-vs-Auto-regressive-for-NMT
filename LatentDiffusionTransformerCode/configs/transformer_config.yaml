@@ -1,29 +1,24 @@
 # Configuration for the Transformer Model
-
 model_params:
-  tokenizer_name: 'bert-base-uncased' # Example tokenizer
-  vocab_size: 30522
-  d_model: 512
+  tokenizer_name: 'bert-base-multilingual-cased'
+  vocab_size: 119547
+  d_model: 256
   nhead: 8
-  num_encoder_layers: 6
-  num_decoder_layers: 6
-  dim_feedforward: 2048
+  num_encoder_layers: 4
+  num_decoder_layers: 4
+  dim_feedforward: 1024
   dropout: 0.1
 
 data:
-  path: 'path/to/your/dataset'
-  format: 'text' # or 'json', 'csv', etc.
+  path: 'data/en-fr.csv'  # Make sure this points to your actual CSV file
+  format: 'csv'
 
 training:
-  batch_size: 32
-  num_epochs: 20
+  batch_size: 64
+  num_epochs: 5
   learning_rate: 0.0001
   optimizer: 'AdamW'
   scheduler: 'None'
-
-inference:
-  max_length: 100
-  num_beams: 5
 
 evaluation:
   batch_size: 64

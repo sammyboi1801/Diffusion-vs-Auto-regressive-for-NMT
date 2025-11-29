@@ -1,59 +1,42 @@
 """
-Base Trainer class with shared methods for training loops, evaluation, and checkpointing.
+Base trainer class.
 """
-from abc import ABC, abstractmethod
 import torch
-from torch.utils.data import DataLoader
+from abc import ABC, abstractmethod
 
 class BaseTrainer(ABC):
     """
     Abstract base class for all trainers.
+    Handles common setup like model, optimizer, and device placement.
     """
-    def __init__(self, model, optimizer, scheduler, train_loader: DataLoader, val_loader: DataLoader, config: dict):
-        """
-        Initializes the BaseTrainer.
-
-        Args:
-            model: The model to be trained.
-            optimizer: The optimizer for training.
-            scheduler: The learning rate scheduler.
-            train_loader (DataLoader): DataLoader for the training set.
-            val_loader (DataLoader): DataLoader for the validation set.
-            config (dict): A dictionary containing training configuration.
-        """
-        raise NotImplementedError("BaseTrainer initialization not implemented.")
+    def __init__(self, model, optimizer, scheduler, train_loader, val_loader, config):
+        self.model = model
+        self.optimizer = optimizer
+        self.scheduler = scheduler
+        self.train_loader = train_loader
+        self.val_loader = val_loader
+        self.config = config
+        
+        # Helper to get device safely
+        if hasattr(config, 'get_device'):
+            self.device = config.get_device()
+        else:
+            # Fallback if config doesn't have the method
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            
+        # Move model to the correct device immediately upon initialization
+        self.model.to(self.device)
 
     @abstractmethod
     def train_one_epoch(self, epoch: int):
         """
-        Runs a single training epoch.
-
-        Args:
-            epoch (int): The current epoch number.
+        Train the model for one epoch.
         """
         raise NotImplementedError
 
     @abstractmethod
     def evaluate(self, epoch: int):
         """
-        Runs evaluation on the validation set.
-
-        Args:
-            epoch (int): The current epoch number.
+        Evaluate the model on the validation set.
         """
         raise NotImplementedError
-
-    def train(self):
-        """
-        The main training loop.
-        """
-        raise NotImplementedError("Trainer function not implemented.")
-
-    def save_checkpoint(self, epoch: int):
-        """
-        Saves a model checkpoint.
-
-        Args:
-            epoch (int): The current epoch number, used for naming the checkpoint.
-        """
-        raise NotImplementedError("Saving checkpoint not implemented.")

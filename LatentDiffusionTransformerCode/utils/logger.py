@@ -1,19 +1,23 @@
-"""
-Logging utility.
-"""
 import logging
 import sys
 
-def setup_logger(name: str, level=logging.INFO) -> logging.Logger:
+def setup_logger(name, level=logging.INFO):
     """
-    Sets up a unified logger.
-
-    Args:
-        name (str): The name of the logger.
-        level: The logging level (e.g., logging.INFO, logging.DEBUG).
-
-    Returns:
-        logging.Logger: A configured logger instance.
+    Sets up a simple logger that prints to console.
     """
-    raise NotImplementedError("Setup logger not implemented.")
-
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    
+    # Create console handler
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(level)
+    
+    # Create formatter
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    
+    # Add handler if not already added
+    if not logger.handlers:
+        logger.addHandler(handler)
+        
+    return logger
