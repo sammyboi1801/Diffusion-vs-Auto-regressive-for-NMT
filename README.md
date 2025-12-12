@@ -6,7 +6,7 @@ Using identical 44M-parameter architectures trained on the OPUS Books dataset, t
 
 ## 📄 Project Overview
 
-Autoregressive transformers (like GPT) generate text sequentially, which creates an inference bottleneck. [cite_start]Diffusion models offer a promising alternative by generating tokens in parallel through iterative refinement.
+Autoregressive transformers (like GPT) generate text sequentially, which creates an inference bottleneck. Diffusion models offer a promising alternative by generating tokens in parallel through iterative refinement.
 
 This project implements both paradigms from scratch to compare:
 1.  **Translation Quality:** BLEU, ROUGE, and BERTScore.
