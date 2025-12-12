@@ -88,6 +88,6 @@ We evaluated both models on a held-out test set using standard NMT metrics.
 
 ## 📚 References
 
-1.  *Opus Books Dataset* - [HuggingFace](https://huggingface.co/datasets/opus_books)
+1.  *Opus Books Dataset* - [HuggingFace]([https://huggingface.co/datasets/opus_books](https://huggingface.co/datasets/Helsinki-NLP/opus_books))
 2.  *Nie et al. (2025). Large Language Diffusion Models (LLaDA)*
 3.  *Ho et al. (2020). Denoising Diffusion Probabilistic Models*
