@@ -60,8 +60,8 @@ Pre-trained weights for both models (trained for 50 epochs) are available for do
 
 | Model | Description | Link |
 | :--- | :--- | :--- |
-| **ARM_epoch_40.pt** | Autoregressive Model Weights | [Download Here](#) |
-| **Diffusion_epoch_40.pt** | Masked Diffusion Model Weights | [Download Here](#) |
+| **ARM_epoch_40.pt** | Autoregressive Model Weights | [Download Here](https://huggingface.co/sammyboi1801/Diffusion-vs-Transformers/tree/main) |
+| **Diffusion_epoch_40.pt** | Masked Diffusion Model Weights | [Download Here](https://huggingface.co/sammyboi1801/Diffusion-vs-Transformers/tree/main) |
 
 *Please create a folder named `checkpoints` in the root directory and place these `.pt` files inside to use the inference cells immediately.*
 
