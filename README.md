@@ -1,2 +1,2 @@
-# LatentDiffusionTransformer
-A novel text generation architecture that combines diffusion models and transformer decoders
+# Comparing Text Diffusion with Autoregressive Generation using Transformers
+
