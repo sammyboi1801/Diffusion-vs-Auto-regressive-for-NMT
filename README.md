@@ -28,7 +28,7 @@ To ensure a fair comparison, both models utilize nearly identical backbones:
 | Component | Autoregressive (ARM) | Masked Diffusion (MDM) |
 | :--- | :--- | :--- |
 | **Training Objective** | Next-token prediction (Causal Masking) | Masked Token Reconstruction (BERT-style) |
-| **Inference** | Sequential Greedy Decoding ($O(N)$) | [Iterative Denoising / LLaDA-style sampling |
+| **Inference** | Sequential Greedy Decoding (O(N)) | [Iterative Denoising / LLaDA-style sampling |
 | **Context** | Unidirectional (Left-to-Right) | Bidirectional (Full Context) |
 
 ## 🚀 Getting Started
