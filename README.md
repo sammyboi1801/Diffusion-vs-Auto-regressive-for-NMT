@@ -82,9 +82,9 @@ We evaluated both models on a held-out test set using standard NMT metrics.
 
 ## 👥 Authors
 
+* **Sam Selvaraj** - Northeastern University | selvaraj.sam@northeastern.edu
 * **Dhruv Puri** - Northeastern University | puri.dh@northeastern.edu
 * **Jatan Patel** - Northeastern University | patel.jatan@northeastern.edu
-* **Sam Selvaraj** - Northeastern University | selvaraj.sam@northeastern.edu
 
 ## 📚 References
 
