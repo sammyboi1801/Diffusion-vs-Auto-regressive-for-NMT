@@ -1,7 +1,8 @@
 # Autoregressive vs. Masked Diffusion Transformers for NMT
 
 <img width="2879" height="1766" alt="image" src="https://github.com/user-attachments/assets/290bedff-0610-48c0-946c-3baafaaf041b" />
-Link: https://huggingface.co/spaces/sammyboi1801/arm_vs_diffusion_nmt_streamlit
+[Project link](https://huggingface.co/spaces/sammyboi1801/arm_vs_diffusion_nmt_streamlit)
+
 This repository contains a PyTorch implementation and comparative analysis of **Autoregressive Models (ARM)** versus **Masked Diffusion Models (MDM)** for English-to-French machine translation.
 
 Using identical 44M-parameter architectures trained on the OPUS Books dataset, this project investigates whether diffusion models can compete with the standard autoregressive paradigm at smaller scales.
